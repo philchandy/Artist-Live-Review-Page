@@ -1,4 +1,6 @@
 // public/js/pages/my-reviews.js
+import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+
 export async function renderMyReviewsPage() {
   const app = document.getElementById('app');
   loadStyle('/styles/my-reviews.css');
@@ -9,25 +11,8 @@ export async function renderMyReviewsPage() {
     return;
   }
 
-  const navLinks = `<li><span>👤 ${user.username}</span></li>
-    <li><a href="#/my-reviews" class="active">My Reviews</a></li>
-    ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
-    <li><a href="#" id="logoutBtn">Logout</a></li>`;
-
   app.innerHTML = `
-    <header class="header">
-      <div class="container header-content">
-        <div class="logo">🎤 LiveLy</div>
-        <nav class="navbar">
-          <ul>
-            <li><a href="#/">Home</a></li>
-            <li><a href="#/browse">Browse Artists</a></li>
-            <li><a href="#/review">Leave a Review</a></li>
-            ${navLinks}
-          </ul>
-        </nav>
-      </div>
-    </header>
+    ${renderNav(user)}
 
     <main class="my-reviews container">
       <h1>My Reviews</h1>
@@ -39,12 +24,7 @@ export async function renderMyReviewsPage() {
     </footer>
   `;
 
-  document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-    e.preventDefault();
-    await fetch('/api/logout', { method: 'POST' });
-    window.location.hash = '#/';
-  });
-
+  attachLogoutHandler();
   await loadReviews();
 }
 
@@ -74,15 +54,6 @@ async function loadReviews() {
   } catch (err) {
     console.error(err);
     reviewsList.innerHTML = '<p>Error loading your reviews.</p>';
-  }
-}
-
-async function checkUser() {
-  try {
-    const res = await fetch('/api/me');
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
   }
 }
 

@@ -1,31 +1,14 @@
 // public/js/pages/browse.js
+import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+
 export async function renderBrowsePage() {
   const app = document.getElementById('app');
   loadStyle('/styles/browse.css');
 
   const user = await checkUser();
-  const navLinks = user
-    ? `<li><span>👤 ${user.username}</span></li>
-       <li><a href="#/my-reviews">My Reviews</a></li>
-       ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
-       <li><a href="#" id="logoutBtn">Logout</a></li>`
-    : `<li><a href="#/login">Login</a></li>
-       <li><a href="#/register">Register</a></li>`;
 
   app.innerHTML = `
-    <header class="header">
-      <div class="container header-content">
-        <div class="logo">🎤 LiveLy</div>
-        <nav class="navbar">
-          <ul>
-            <li><a href="#/">Home</a></li>
-            <li><a href="#/browse" class="active">Browse Artists</a></li>
-            <li><a href="#/review">Leave a Review</a></li>
-            ${navLinks}
-          </ul>
-        </nav>
-      </div>
-    </header>
+    ${renderNav(user, 'browse')}
 
     <main class="browse container">
       <h1>Browse Artists</h1>
@@ -44,13 +27,7 @@ export async function renderBrowsePage() {
     </footer>
   `;
 
-  if (user) {
-    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await fetch('/api/logout', { method: 'POST' });
-      window.location.hash = '#/';
-    });
-  }
+  attachLogoutHandler();
 
   const searchInput = document.getElementById('searchInput');
   const artistsList = document.getElementById('artistsList');
@@ -117,15 +94,6 @@ export async function renderBrowsePage() {
 }
 
 /* ===== Helpers ===== */
-async function checkUser() {
-  try {
-    const res = await fetch('/api/me');
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
-  }
-}
-
 function loadStyle(href) {
   if (!document.querySelector(`link[href="${href}"]`)) {
     const link = document.createElement('link');

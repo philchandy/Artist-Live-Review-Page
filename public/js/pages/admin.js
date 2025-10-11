@@ -1,9 +1,15 @@
 // public/js/pages/admin.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
+import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderAdminPage() {
   const app = document.getElementById('app');
   loadStyle('/styles/admin.css');
+  loadStyle('/styles/loading.css');
 
   const user = await checkUser();
   if (!user || user.role !== 'admin') {
@@ -16,7 +22,7 @@ export async function renderAdminPage() {
 
     <main class="admin container">
       <h1>Admin Dashboard</h1>
-      <div id="reviewsList">Loading...</div>
+      <div id="reviewsList">${showLoading('Loading all reviews...')}</div>
     </main>
 
     <footer class="footer">
@@ -36,11 +42,13 @@ async function loadReviews() {
     const reviews = await res.json();
 
     if (!reviews.length) {
-      reviewsList.innerHTML = '<p>No reviews found.</p>';
+      reviewsList.innerHTML = showEmpty('No reviews found.');
       return;
     }
 
-    reviewsList.innerHTML = reviews.map(r => `
+    reviewsList.innerHTML = reviews
+      .map(
+        (r) => `
       <div class="review-item" data-id="${r._id}">
         <div class="review-header">
           <strong>${r.username || 'Anonymous'}</strong>
@@ -54,26 +62,36 @@ async function loadReviews() {
           <button class="btn-delete" data-id="${r._id}">Delete</button>
         </div>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
-    document.querySelectorAll('.btn-edit').forEach(btn => {
+    document.querySelectorAll('.btn-edit').forEach((btn) => {
       btn.addEventListener('click', () => editReview(btn.dataset.id));
     });
 
-    document.querySelectorAll('.btn-delete').forEach(btn => {
+    document.querySelectorAll('.btn-delete').forEach((btn) => {
       btn.addEventListener('click', () => deleteReview(btn.dataset.id));
     });
   } catch (err) {
     console.error(err);
-    reviewsList.innerHTML = '<p>Error loading reviews.</p>';
+    reviewsList.innerHTML = showError(
+      'Failed to load reviews. Please try again.'
+    );
   }
 }
 
 async function editReview(id) {
   const reviewItem = document.querySelector(`.review-item[data-id="${id}"]`);
-  const comment = reviewItem.querySelector('p:nth-of-type(3)').textContent.replace('Comment: ', '');
-  const rating = reviewItem.querySelector('.review-header span').textContent.match(/\d+/)[0];
-  const venue = reviewItem.querySelector('p:nth-of-type(2)').textContent.replace('Venue: ', '');
+  const comment = reviewItem
+    .querySelector('p:nth-of-type(3)')
+    .textContent.replace('Comment: ', '');
+  const rating = reviewItem
+    .querySelector('.review-header span')
+    .textContent.match(/\d+/)[0];
+  const venue = reviewItem
+    .querySelector('p:nth-of-type(2)')
+    .textContent.replace('Venue: ', '');
 
   const newComment = prompt('Edit comment:', comment);
   const newRating = prompt('Edit rating (1-5):', rating);
@@ -85,7 +103,11 @@ async function editReview(id) {
     const res = await fetch(`/api/reviews/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ comment: newComment, rating: newRating, venue: newVenue })
+      body: JSON.stringify({
+        comment: newComment,
+        rating: newRating,
+        venue: newVenue,
+      }),
     });
 
     if (res.ok) {

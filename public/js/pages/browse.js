@@ -1,9 +1,15 @@
 // public/js/pages/browse.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
+import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderBrowsePage() {
   const app = document.getElementById('app');
   loadStyle('/styles/browse.css');
+  loadStyle('/styles/loading.css');
 
   const user = await checkUser();
 
@@ -19,7 +25,7 @@ export async function renderBrowsePage() {
           placeholder="Search artists by name..." 
         />
       </div>
-      <div id="artistsList" class="artists-grid">Loading...</div>
+      <div id="artistsList" class="artists-grid">${showLoading('Loading artists...')}</div>
     </main>
 
     <footer class="footer">
@@ -44,7 +50,7 @@ export async function renderBrowsePage() {
   });
 
   async function fetchArtists(query = '') {
-    artistsList.innerHTML = `<p>Loading...</p>`;
+    artistsList.innerHTML = showLoading('Searching artists...');
 
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
@@ -61,7 +67,7 @@ export async function renderBrowsePage() {
       );
 
       if (!artists.length) {
-        artistsList.innerHTML = `<p>No artists found.</p>`;
+        artistsList.innerHTML = showEmpty('No artists found.');
         return;
       }
 
@@ -88,7 +94,9 @@ export async function renderBrowsePage() {
       });
     } catch (err) {
       console.error('Error loading artists:', err);
-      artistsList.innerHTML = `<p>⚠️ Error loading artists.</p>`;
+      artistsList.innerHTML = showError(
+        'Failed to load artists. Please try again.'
+      );
     }
   }
 }

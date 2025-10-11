@@ -1,9 +1,15 @@
 // public/js/pages/my-reviews.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
+import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderMyReviewsPage() {
   const app = document.getElementById('app');
   loadStyle('/styles/my-reviews.css');
+  loadStyle('/styles/loading.css');
 
   const user = await checkUser();
   if (!user) {
@@ -16,7 +22,7 @@ export async function renderMyReviewsPage() {
 
     <main class="my-reviews container">
       <h1>My Reviews</h1>
-      <div id="reviewsList">Loading...</div>
+      <div id="reviewsList">${showLoading('Loading your reviews...')}</div>
     </main>
 
     <footer class="footer">
@@ -36,11 +42,13 @@ async function loadReviews() {
     const reviews = await res.json();
 
     if (!reviews.length) {
-      reviewsList.innerHTML = '<p>You haven\'t written any reviews yet.</p>';
+      reviewsList.innerHTML = showEmpty("You haven't written any reviews yet.");
       return;
     }
 
-    reviewsList.innerHTML = reviews.map(r => `
+    reviewsList.innerHTML = reviews
+      .map(
+        (r) => `
       <div class="review-item">
         <div class="review-header">
           <strong>${r.artistName || 'Unknown Artist'}</strong>
@@ -50,10 +58,14 @@ async function loadReviews() {
         <p><strong>Date:</strong> ${new Date(r.concertDate).toLocaleDateString()}</p>
         <p><strong>Comment:</strong> ${r.comment}</p>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   } catch (err) {
     console.error(err);
-    reviewsList.innerHTML = '<p>Error loading your reviews.</p>';
+    reviewsList.innerHTML = showError(
+      'Failed to load your reviews. Please try again.'
+    );
   }
 }
 

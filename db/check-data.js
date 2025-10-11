@@ -24,22 +24,26 @@ async function checkData() {
     console.log('─────────────────────────\n');
 
     if (totalCount >= 1000) {
-      console.log('✅ PASS: Database has 1,000+ records (Rubric requirement met)');
+      console.log(
+        '✅ PASS: Database has 1,000+ records (Rubric requirement met)'
+      );
     } else {
-      console.log(`❌ FAIL: Database has only ${totalCount} records (Need 1,000+)`);
+      console.log(
+        `❌ FAIL: Database has only ${totalCount} records (Need 1,000+)`
+      );
     }
 
     // Show sample data
     console.log('\n📋 Sample Data:');
     const sampleArtist = await db.collection('artists').findOne();
     const sampleReview = await db.collection('reviews').findOne();
-    
+
     if (sampleArtist) {
       console.log('\n🎤 Sample Artist:');
       console.log(`   Name: ${sampleArtist.name}`);
       console.log(`   Genre: ${sampleArtist.genre}`);
     }
-    
+
     if (sampleReview) {
       console.log('\n⭐ Sample Review:');
       console.log(`   Rating: ${sampleReview.rating}/5`);

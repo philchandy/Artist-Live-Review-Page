@@ -1,5 +1,9 @@
 // public/js/pages/review-page.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
 
 export async function renderReviewForm() {
   const app = document.getElementById('app');
@@ -78,26 +82,24 @@ export async function renderReviewForm() {
     const venue = document.getElementById('venue')?.value?.trim() || '';
     const concertDate = document.getElementById('date')?.value?.trim() || '';
 
-    // Track missing fields for debugging
-    const missingFields = [];
-    if (!artistName) missingFields.push('artistName');
-    if (!rating) missingFields.push('rating');
-    if (!comment) missingFields.push('comment');
-    if (!venue) missingFields.push('venue');
-    if (!concertDate) missingFields.push('concertDate');
-
-    if (missingFields.length > 0) {
-      console.warn('⚠️ Missing fields:', missingFields.join(', '));
-      message.textContent = `⚠️ Please fill out all fields (${missingFields.join(', ')}).`;
+    if (!artistName || !rating || !comment || !venue || !concertDate) {
+      message.textContent = '⚠️ Please fill out all fields.';
       message.className = 'message error';
       return;
     }
 
-    // Additional front-end date check
     if (isNaN(new Date(concertDate).getTime())) {
       message.textContent = '⚠️ Invalid date format.';
       message.className = 'message error';
-      console.error('Invalid date value:', concertDate);
+      return;
+    }
+
+    if (!user) {
+      message.textContent = '⚠️ Please log in to submit a review.';
+      message.className = 'message error';
+      setTimeout(() => {
+        window.location.hash = '#/login';
+      }, 1500);
       return;
     }
 
@@ -107,11 +109,9 @@ export async function renderReviewForm() {
       comment,
       venue,
       concertDate,
-      userId: user?.userId,
-      username: user?.username,
+      userId: user.userId,
+      username: user.username,
     };
-
-    console.log('📤 Submitting review:', data);
 
     try {
       const res = await fetch('/api/reviews', {
@@ -121,7 +121,6 @@ export async function renderReviewForm() {
       });
 
       const result = await res.json();
-      console.log('📥 Server response:', result);
 
       if (res.ok) {
         message.textContent = `✅ Review for "${artistName}" submitted successfully!`;
@@ -136,8 +135,7 @@ export async function renderReviewForm() {
         message.className = 'message error';
       }
     } catch (err) {
-      console.error('💥 Error submitting review:', err);
-      message.textContent = '⚠️ Failed to submit review.';
+      message.textContent = '⚠️ Failed to submit review. Please try again.';
       message.className = 'message error';
     }
   });

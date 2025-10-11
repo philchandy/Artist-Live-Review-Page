@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 async function seed() {
   try {
     console.log('🌱 Starting database seed...');
-    
+
     await connectDB();
     const db = getDB();
 
@@ -26,9 +26,15 @@ async function seed() {
 
     // Read JSON files from Mockaroo
     console.log('📖 Reading Mockaroo data files...');
-    const usersData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_USER_DATA.json'), 'utf-8'));
-    const artistsData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_ARTIST_DATA.json'), 'utf-8'));
-    const reviewsData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_REVIEW_DATA.json'), 'utf-8'));
+    const usersData = JSON.parse(
+      readFileSync(join(__dirname, 'data/MOCK_USER_DATA.json'), 'utf-8')
+    );
+    const artistsData = JSON.parse(
+      readFileSync(join(__dirname, 'data/MOCK_ARTIST_DATA.json'), 'utf-8')
+    );
+    const reviewsData = JSON.parse(
+      readFileSync(join(__dirname, 'data/MOCK_REVIEW_DATA.json'), 'utf-8')
+    );
 
     // Insert users with hashed passwords
     console.log('👥 Inserting users...');
@@ -38,7 +44,7 @@ async function seed() {
         email: user.email,
         password: await bcrypt.hash(user.password || 'password123', 10),
         role: user.role || 'user',
-        createdAt: new Date()
+        createdAt: new Date(),
       }))
     );
     const userResult = await db.collection('users').insertMany(usersToInsert);
@@ -52,9 +58,11 @@ async function seed() {
       genre: artist.genre || 'Unknown',
       bio: artist.bio || '',
       image: artist.image || '',
-      createdAt: new Date()
+      createdAt: new Date(),
     }));
-    const artistResult = await db.collection('artists').insertMany(artistsToInsert);
+    const artistResult = await db
+      .collection('artists')
+      .insertMany(artistsToInsert);
     const artistIds = Object.values(artistResult.insertedIds);
     console.log(`✅ Inserted ${artistIds.length} artists`);
 
@@ -63,7 +71,7 @@ async function seed() {
     const reviewsToInsert = reviewsData.map((review) => {
       const artistIndex = (review.artistId || 1) - 1;
       const userIndex = (review.userId || 1) - 1;
-      
+
       return {
         artistId: artistIds[artistIndex % artistIds.length].toString(),
         userId: userIds[userIndex % userIds.length].toString(),
@@ -72,10 +80,12 @@ async function seed() {
         comment: review.comment || 'Great performance!',
         venue: review.venue || 'Unknown Venue',
         concertDate: new Date(review.concertDate || new Date()),
-        createdAt: new Date()
+        createdAt: new Date(),
       };
     });
-    const reviewResult = await db.collection('reviews').insertMany(reviewsToInsert);
+    const reviewResult = await db
+      .collection('reviews')
+      .insertMany(reviewsToInsert);
     console.log(`✅ Inserted ${reviewResult.insertedCount} reviews`);
 
     // Summary
@@ -83,9 +93,11 @@ async function seed() {
     console.log(`   Users: ${userIds.length}`);
     console.log(`   Artists: ${artistIds.length}`);
     console.log(`   Reviews: ${reviewResult.insertedCount}`);
-    console.log(`   Total Records: ${userIds.length + artistIds.length + reviewResult.insertedCount}`);
+    console.log(
+      `   Total Records: ${userIds.length + artistIds.length + reviewResult.insertedCount}`
+    );
     console.log('\n✅ Database seeding complete!');
-    
+
     process.exit(0);
   } catch (error) {
     console.error('❌ Seeding error:', error);

@@ -1,5 +1,9 @@
 // public/js/pages/artist-detail.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
 import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderArtistDetail(artistId) {
@@ -47,7 +51,9 @@ export async function renderArtistDetail(artistId) {
       <section class="reviews-section">
         <h2>Fan Reviews</h2>
         <div class="reviews-container">
-          ${reviews.length ? reviews
+          ${
+            reviews.length
+              ? reviews
                   .map(
                     (r) => `
                     <div class="review-card">
@@ -62,7 +68,8 @@ export async function renderArtistDetail(artistId) {
                     </div>`
                   )
                   .join('')
-              : showEmpty('No reviews yet.')}
+              : showEmpty('No reviews yet.')
+          }
         
         </div>
       </section>

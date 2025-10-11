@@ -169,5 +169,3 @@ main.home {
   z-index: 5;
   min-height: calc(100vh - 140px); /* ensures page fills full height */
 }
-
-/* ====================================*

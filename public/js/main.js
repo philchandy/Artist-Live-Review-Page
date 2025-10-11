@@ -31,10 +31,7 @@ async function router() {
       break;
 
     case hash === '#/browse':
-      renderBrowsePage();
-      break;
-    case hash === '#/browse':
-      await renderBrowsePage(); //  ensure it refetches each time
+      await renderBrowsePage();
       break;
 
     case hash === '#/review':
@@ -50,10 +47,11 @@ async function router() {
       break;
 
     // Artist Detail Page
-    case hash.startsWith('#/artist/'):
+    case hash.startsWith('#/artist/'): {
       const artistId = hash.split('/')[2];
       await renderArtistDetail(artistId);
       break;
+    }
 
     default:
       app.innerHTML = '<h2>404 - Page Not Found</h2>';

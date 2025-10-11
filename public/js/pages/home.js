@@ -1,10 +1,14 @@
 // public/js/pages/home.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
 
 export async function renderPage() {
   const app = document.getElementById('app');
   const currentUser = await checkUser();
-  
+
   app.innerHTML = `
     ${renderNav(currentUser, 'home')}
 
@@ -24,6 +28,6 @@ export async function renderPage() {
       <p>© 2025 LiveLy | Built by Eric Fu & Brandan Yong</p>
     </footer>
   `;
-  
+
   attachLogoutHandler();
 }

@@ -1,5 +1,9 @@
 // public/js/pages/my-reviews.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
 import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderMyReviewsPage() {
@@ -38,11 +42,13 @@ async function loadReviews() {
     const reviews = await res.json();
 
     if (!reviews.length) {
-      reviewsList.innerHTML = showEmpty('You haven\'t written any reviews yet.');
+      reviewsList.innerHTML = showEmpty("You haven't written any reviews yet.");
       return;
     }
 
-    reviewsList.innerHTML = reviews.map(r => `
+    reviewsList.innerHTML = reviews
+      .map(
+        (r) => `
       <div class="review-item">
         <div class="review-header">
           <strong>${r.artistName || 'Unknown Artist'}</strong>
@@ -52,10 +58,14 @@ async function loadReviews() {
         <p><strong>Date:</strong> ${new Date(r.concertDate).toLocaleDateString()}</p>
         <p><strong>Comment:</strong> ${r.comment}</p>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
   } catch (err) {
     console.error(err);
-    reviewsList.innerHTML = showError('Failed to load your reviews. Please try again.');
+    reviewsList.innerHTML = showError(
+      'Failed to load your reviews. Please try again.'
+    );
   }
 }
 

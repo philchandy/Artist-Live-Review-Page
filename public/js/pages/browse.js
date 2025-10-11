@@ -1,5 +1,9 @@
 // public/js/pages/browse.js
-import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import {
+  renderNav,
+  attachLogoutHandler,
+  checkUser,
+} from '../components/nav.js';
 import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderBrowsePage() {
@@ -90,7 +94,9 @@ export async function renderBrowsePage() {
       });
     } catch (err) {
       console.error('Error loading artists:', err);
-      artistsList.innerHTML = showError('Failed to load artists. Please try again.');
+      artistsList.innerHTML = showError(
+        'Failed to load artists. Please try again.'
+      );
     }
   }
 }

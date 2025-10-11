@@ -1,0 +1,36 @@
+/* public/styles/my-reviews.css */
+.my-reviews {
+  padding: 2rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.my-reviews h1 {
+  margin-bottom: 2rem;
+  color: #1db954;
+}
+
+#reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-item {
+  background: #282828;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #404040;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: #1db954;
+}
+
+.review-item p {
+  margin: 0.5rem 0;
+  color: #b3b3b3;
+}

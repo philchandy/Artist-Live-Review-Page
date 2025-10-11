@@ -23,8 +23,9 @@ export async function renderPage() {
             <li><a href="#/browse">Browse Artists</a></li>
             ${currentUser ? `
               <li><a href="#/review">Leave a Review</a></li>
-              ${currentUser.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
               <li><span style="color: white; margin-right: 10px;">👤 ${currentUser.username}</span></li>
+              <li><a href="#/my-reviews">My Reviews</a></li>
+              ${currentUser.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
               <li><a href="#" id="logout-btn">Logout</a></li>
             ` : `
               <li><a href="#/login">Login</a></li>

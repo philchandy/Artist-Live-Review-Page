@@ -239,6 +239,29 @@ app.get('/api/search', async (req, res) => {
 });
 
 /* ===============================
+   USER ROUTES
+================================= */
+app.get('/api/my-reviews', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const { ObjectId } = await import('mongodb');
+    const reviews = await db.collection('reviews').find({ userId: req.session.userId }).toArray();
+    
+    const reviewsWithArtists = await Promise.all(
+      reviews.map(async (review) => {
+        const artist = await db.collection('artists').findOne({ _id: new ObjectId(review.artistId) });
+        return { ...review, artistName: artist?.name || 'Unknown Artist' };
+      })
+    );
+    
+    res.json(reviewsWithArtists);
+  } catch (err) {
+    console.error('Error fetching user reviews:', err);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+/* ===============================
    ADMIN ROUTES
 ================================= */
 app.get('/api/admin/reviews', requireAdmin, async (req, res) => {

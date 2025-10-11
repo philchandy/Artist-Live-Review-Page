@@ -6,6 +6,7 @@ export async function renderBrowsePage() {
   const user = await checkUser();
   const navLinks = user
     ? `<li><span>👤 ${user.username}</span></li>
+       <li><a href="#/my-reviews">My Reviews</a></li>
        ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
        <li><a href="#" id="logoutBtn">Logout</a></li>`
     : `<li><a href="#/login">Login</a></li>

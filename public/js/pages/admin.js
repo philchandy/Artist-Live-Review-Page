@@ -10,6 +10,7 @@ export async function renderAdminPage() {
   }
 
   const navLinks = `<li><span>👤 ${user.username}</span></li>
+    <li><a href="#/my-reviews">My Reviews</a></li>
     <li><a href="#/admin" class="active">Admin</a></li>
     <li><a href="#" id="logoutBtn">Logout</a></li>`;
 

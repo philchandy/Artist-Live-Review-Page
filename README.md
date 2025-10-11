@@ -16,7 +16,7 @@ Lively is an application for users to view and leave reviews on live performance
 
 ## Screenshot
 
-![Lively Preview](./images/lively_screenshot.png)
+![Lively Preview](public/img/lively_screenshot.png)
 
 
 ## Instructions to Build

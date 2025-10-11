@@ -34,6 +34,13 @@ const requireAuth = (req, res, next) => {
   next();
 };
 
+const requireAdmin = (req, res, next) => {
+  if (!req.session.userId || req.session.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
 /* ===============================
    AUTH ROUTES
 ================================= */
@@ -228,6 +235,96 @@ app.get('/api/search', async (req, res) => {
   } catch (err) {
     console.error('Search error:', err);
     res.status(500).json({ error: 'Failed to perform search' });
+  }
+});
+
+/* ===============================
+   USER ROUTES
+================================= */
+app.get('/api/my-reviews', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const { ObjectId } = await import('mongodb');
+    const reviews = await db.collection('reviews').find({ userId: req.session.userId }).toArray();
+    
+    const reviewsWithArtists = await Promise.all(
+      reviews.map(async (review) => {
+        const artist = await db.collection('artists').findOne({ _id: new ObjectId(review.artistId) });
+        return { ...review, artistName: artist?.name || 'Unknown Artist' };
+      })
+    );
+    
+    res.json(reviewsWithArtists);
+  } catch (err) {
+    console.error('Error fetching user reviews:', err);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+/* ===============================
+   ADMIN ROUTES
+================================= */
+app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
+  try {
+    const db = getDB();
+    const reviews = await db.collection('reviews').find().toArray();
+    res.json(reviews);
+  } catch (err) {
+    console.error('Error fetching all reviews:', err);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+app.put('/api/reviews/:id', requireAdmin, async (req, res) => {
+  try {
+    const db = getDB();
+    const { ObjectId } = await import('mongodb');
+    const { comment, rating, venue } = req.body;
+
+    if (!comment || !rating || !venue) {
+      return res.status(400).json({ error: 'Comment, rating, and venue are required' });
+    }
+
+    const result = await db.collection('reviews').updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { 
+        $set: { 
+          comment: comment.trim(), 
+          rating: parseInt(rating, 10),
+          venue: venue.trim(),
+          updatedAt: new Date()
+        } 
+      }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    res.json({ success: true, message: 'Review updated successfully' });
+  } catch (err) {
+    console.error('Error updating review:', err);
+    res.status(500).json({ error: 'Failed to update review' });
+  }
+});
+
+app.delete('/api/reviews/:id', requireAdmin, async (req, res) => {
+  try {
+    const db = getDB();
+    const { ObjectId } = await import('mongodb');
+
+    const result = await db.collection('reviews').deleteOne(
+      { _id: new ObjectId(req.params.id) }
+    );
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+
+    res.json({ success: true, message: 'Review deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting review:', err);
+    res.status(500).json({ error: 'Failed to delete review' });
   }
 });
 

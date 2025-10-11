@@ -6,6 +6,8 @@ import { renderLoginPage } from './pages/login.js';
 import { renderBrowsePage } from './pages/browse.js';
 import { renderArtistDetail } from './pages/artist-detail.js';
 import { renderReviewForm } from './pages/review-form.js';
+import { renderAdminPage } from './pages/admin.js';
+import { renderMyReviewsPage } from './pages/my-reviews.js';
 
 async function router() {
   const hash = window.location.hash || '#/';
@@ -37,6 +39,14 @@ async function router() {
 
     case hash === '#/review':
       renderReviewForm();
+      break;
+
+    case hash === '#/admin':
+      await renderAdminPage();
+      break;
+
+    case hash === '#/my-reviews':
+      await renderMyReviewsPage();
       break;
 
     // Artist Detail Page

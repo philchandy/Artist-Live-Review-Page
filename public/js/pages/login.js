@@ -84,7 +84,7 @@ export function renderLoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        window.location.href = '/';
+        window.location.hash = '#/';
       } else {
         formStatus.textContent = data.error || 'Login failed';
         formStatus.style.color = '#c62828';

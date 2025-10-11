@@ -3,6 +3,15 @@ export async function renderBrowsePage() {
   const app = document.getElementById('app');
   loadStyle('/styles/browse.css');
 
+  const user = await checkUser();
+  const navLinks = user
+    ? `<li><span>👤 ${user.username}</span></li>
+       <li><a href="#/my-reviews">My Reviews</a></li>
+       ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
+       <li><a href="#" id="logoutBtn">Logout</a></li>`
+    : `<li><a href="#/login">Login</a></li>
+       <li><a href="#/register">Register</a></li>`;
+
   app.innerHTML = `
     <header class="header">
       <div class="container header-content">
@@ -12,8 +21,7 @@ export async function renderBrowsePage() {
             <li><a href="#/">Home</a></li>
             <li><a href="#/browse" class="active">Browse Artists</a></li>
             <li><a href="#/review">Leave a Review</a></li>
-            <li><a href="#/login">Login</a></li>
-            <li><a href="#/register">Register</a></li>
+            ${navLinks}
           </ul>
         </nav>
       </div>
@@ -35,6 +43,14 @@ export async function renderBrowsePage() {
       <p>© 2025 LiveLy | Built by Eric Fu & Brandan Yong</p>
     </footer>
   `;
+
+  if (user) {
+    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.hash = '#/';
+    });
+  }
 
   const searchInput = document.getElementById('searchInput');
   const artistsList = document.getElementById('artistsList');
@@ -100,7 +116,16 @@ export async function renderBrowsePage() {
   }
 }
 
-/* ===== Helper ===== */
+/* ===== Helpers ===== */
+async function checkUser() {
+  try {
+    const res = await fetch('/api/me');
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
 function loadStyle(href) {
   if (!document.querySelector(`link[href="${href}"]`)) {
     const link = document.createElement('link');

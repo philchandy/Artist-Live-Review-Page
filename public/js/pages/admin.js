@@ -1,4 +1,6 @@
 // public/js/pages/admin.js
+import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+
 export async function renderAdminPage() {
   const app = document.getElementById('app');
   loadStyle('/styles/admin.css');
@@ -9,25 +11,8 @@ export async function renderAdminPage() {
     return;
   }
 
-  const navLinks = `<li><span>👤 ${user.username}</span></li>
-    <li><a href="#/my-reviews">My Reviews</a></li>
-    <li><a href="#/admin" class="active">Admin</a></li>
-    <li><a href="#" id="logoutBtn">Logout</a></li>`;
-
   app.innerHTML = `
-    <header class="header">
-      <div class="container header-content">
-        <div class="logo">🎤 LiveLy</div>
-        <nav class="navbar">
-          <ul>
-            <li><a href="#/">Home</a></li>
-            <li><a href="#/browse">Browse Artists</a></li>
-            <li><a href="#/review">Leave a Review</a></li>
-            ${navLinks}
-          </ul>
-        </nav>
-      </div>
-    </header>
+    ${renderNav(user)}
 
     <main class="admin container">
       <h1>Admin Dashboard</h1>
@@ -39,12 +24,7 @@ export async function renderAdminPage() {
     </footer>
   `;
 
-  document.getElementById('logoutBtn').addEventListener('click', async (e) => {
-    e.preventDefault();
-    await fetch('/api/logout', { method: 'POST' });
-    window.location.hash = '#/';
-  });
-
+  attachLogoutHandler();
   await loadReviews();
 }
 
@@ -136,15 +116,6 @@ async function deleteReview(id) {
   } catch (err) {
     console.error(err);
     alert('Error deleting review');
-  }
-}
-
-async function checkUser() {
-  try {
-    const res = await fetch('/api/me');
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
   }
 }
 

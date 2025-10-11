@@ -1,32 +1,15 @@
 // public/js/pages/artist-detail.js
+import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+
 export async function renderArtistDetail(artistId) {
   const app = document.getElementById('app');
   await ensureStyleLoaded('/styles/artist-detail.css');
 
   const user = await checkUser();
-  const navLinks = user
-    ? `<li><span>👤 ${user.username}</span></li>
-       <li><a href="#/my-reviews">My Reviews</a></li>
-       ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
-       <li><a href="#" id="logoutBtn">Logout</a></li>`
-    : `<li><a href="#/login">Login</a></li>
-       <li><a href="#/register">Register</a></li>`;
 
   // ===== BASE STRUCTURE =====
   app.innerHTML = `
-    <header class="header">
-      <div class="container header-content">
-        <div class="logo">🎤 LiveLy</div>
-        <nav class="navbar">
-          <ul>
-            <li><a href="#/">Home</a></li>
-            <li><a href="#/browse">Browse Artists</a></li>
-            <li><a href="#/review">Leave a Review</a></li>
-            ${navLinks}
-          </ul>
-        </nav>
-      </div>
-    </header>
+    ${renderNav(user)}
 
     <main class="artist-detail container">
       <h2>Loading artist...</h2>
@@ -37,13 +20,7 @@ export async function renderArtistDetail(artistId) {
     </footer>
   `;
 
-  if (user) {
-    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await fetch('/api/logout', { method: 'POST' });
-      window.location.hash = '#/';
-    });
-  }
+  attachLogoutHandler();
 
   try {
     // Fetch artist info + reviews
@@ -111,15 +88,6 @@ export async function renderArtistDetail(artistId) {
 }
 
 /* ===== Helpers ===== */
-async function checkUser() {
-  try {
-    const res = await fetch('/api/me');
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
-  }
-}
-
 function ensureStyleLoaded(href) {
   return new Promise((resolve) => {
     const existing = document.querySelector(`link[href="${href}"]`);

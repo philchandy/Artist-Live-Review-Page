@@ -1,33 +1,16 @@
 // public/js/pages/review-page.js
+import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+
 export async function renderReviewForm() {
   const app = document.getElementById('app');
   loadStyle('/styles/review-form.css');
 
   const user = await checkUser();
-  const navLinks = user
-    ? `<li><span>👤 ${user.username}</span></li>
-       <li><a href="#/my-reviews">My Reviews</a></li>
-       ${user.role === 'admin' ? '<li><a href="#/admin">Admin</a></li>' : ''}
-       <li><a href="#" id="logoutBtn">Logout</a></li>`
-    : `<li><a href="#/login">Login</a></li>
-       <li><a href="#/register">Register</a></li>`;
 
   // ===== PAGE STRUCTURE =====
   app.innerHTML = `
     <div class="review-page-container">
-      <header class="header">
-        <div class="container header-content">
-          <div class="logo">🎤 LiveLy</div>
-          <nav class="navbar">
-            <ul>
-              <li><a href="#/">Home</a></li>
-              <li><a href="#/browse">Browse Artists</a></li>
-              <li><a href="#/review" class="active">Leave a Review</a></li>
-              ${navLinks}
-            </ul>
-          </nav>
-        </div>
-      </header>
+      ${renderNav(user, 'review')}
 
       <main class="review-page">
         <div class="review-card">
@@ -79,13 +62,7 @@ export async function renderReviewForm() {
     </div>
   `;
 
-  if (user) {
-    document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await fetch('/api/logout', { method: 'POST' });
-      window.location.hash = '#/';
-    });
-  }
+  attachLogoutHandler();
 
   // ===== FORM HANDLING =====
   const form = document.getElementById('reviewForm');
@@ -167,15 +144,6 @@ export async function renderReviewForm() {
 }
 
 /* ===== HELPERS ===== */
-async function checkUser() {
-  try {
-    const res = await fetch('/api/me');
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
-  }
-}
-
 function loadStyle(href) {
   if (!document.querySelector(`link[href="${href}"]`)) {
     const link = document.createElement('link');

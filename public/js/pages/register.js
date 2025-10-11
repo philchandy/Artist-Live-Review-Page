@@ -96,7 +96,7 @@ export function renderRegisterPage() {
       const data = await response.json();
 
       if (response.ok) {
-        window.location.href = '/';
+        window.location.hash = '#/';
       } else {
         formStatus.textContent = data.error || 'Registration failed';
         formStatus.style.color = '#c62828';

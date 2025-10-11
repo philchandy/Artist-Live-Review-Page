@@ -30,3 +30,7 @@ Lively is an application for users to view and leave reviews on live performance
 ## License
 
 MIT
+
+## Link to Deployment
+
+http://lively-ifx9.onrender.com/#/

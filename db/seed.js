@@ -26,9 +26,9 @@ async function seed() {
 
     // Read JSON files from Mockaroo
     console.log('📖 Reading Mockaroo data files...');
-    const usersData = JSON.parse(readFileSync(join(__dirname, 'data/users.json'), 'utf-8'));
-    const artistsData = JSON.parse(readFileSync(join(__dirname, 'data/artists.json'), 'utf-8'));
-    const reviewsData = JSON.parse(readFileSync(join(__dirname, 'data/reviews.json'), 'utf-8'));
+    const usersData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_USER_DATA.json'), 'utf-8'));
+    const artistsData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_ARTIST_DATA.json'), 'utf-8'));
+    const reviewsData = JSON.parse(readFileSync(join(__dirname, 'data/MOCK_REVIEW_DATA.json'), 'utf-8'));
 
     // Insert users with hashed passwords
     console.log('👥 Inserting users...');

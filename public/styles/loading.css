@@ -1,0 +1,45 @@
+/* public/styles/loading.css */
+.loading-container,
+.error-container,
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  min-height: 200px;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-text {
+  color: #1db954;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.error-text {
+  color: #e22134;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.empty-text {
+  color: #b3b3b3;
+  font-size: 1rem;
+  text-align: center;
+}

@@ -1,9 +1,11 @@
 // public/js/pages/artist-detail.js
 import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderArtistDetail(artistId) {
   const app = document.getElementById('app');
   await ensureStyleLoaded('/styles/artist-detail.css');
+  await ensureStyleLoaded('/styles/loading.css');
 
   const user = await checkUser();
 
@@ -12,7 +14,7 @@ export async function renderArtistDetail(artistId) {
     ${renderNav(user)}
 
     <main class="artist-detail container">
-      <h2>Loading artist...</h2>
+      ${showLoading('Loading artist details...')}
     </main>
 
     <footer class="footer">
@@ -45,9 +47,7 @@ export async function renderArtistDetail(artistId) {
       <section class="reviews-section">
         <h2>Fan Reviews</h2>
         <div class="reviews-container">
-          ${
-            reviews.length
-              ? reviews
+          ${reviews.length ? reviews
                   .map(
                     (r) => `
                     <div class="review-card">
@@ -62,8 +62,8 @@ export async function renderArtistDetail(artistId) {
                     </div>`
                   )
                   .join('')
-              : `<p>No reviews yet.</p>`
-          }
+              : showEmpty('No reviews yet.')}
+        
         </div>
       </section>
 
@@ -80,9 +80,10 @@ export async function renderArtistDetail(artistId) {
     console.error(err);
     const main = document.querySelector('main');
     main.innerHTML = `
-      <h2>Error loading artist details.</h2>
-      <p>Please try again later.</p>
-      <button class="btn" onclick="window.location.hash='#/browse'">← Back</button>
+      ${showError('Failed to load artist details.')}
+      <div class="btn-wrapper">
+        <button class="btn" onclick="window.location.hash='#/browse'">← Back to Browse</button>
+      </div>
     `;
   }
 }

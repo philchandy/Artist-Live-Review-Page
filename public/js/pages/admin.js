@@ -1,9 +1,11 @@
 // public/js/pages/admin.js
 import { renderNav, attachLogoutHandler, checkUser } from '../components/nav.js';
+import { showLoading, showError, showEmpty } from '../components/loading.js';
 
 export async function renderAdminPage() {
   const app = document.getElementById('app');
   loadStyle('/styles/admin.css');
+  loadStyle('/styles/loading.css');
 
   const user = await checkUser();
   if (!user || user.role !== 'admin') {
@@ -16,7 +18,7 @@ export async function renderAdminPage() {
 
     <main class="admin container">
       <h1>Admin Dashboard</h1>
-      <div id="reviewsList">Loading...</div>
+      <div id="reviewsList">${showLoading('Loading all reviews...')}</div>
     </main>
 
     <footer class="footer">
@@ -36,7 +38,7 @@ async function loadReviews() {
     const reviews = await res.json();
 
     if (!reviews.length) {
-      reviewsList.innerHTML = '<p>No reviews found.</p>';
+      reviewsList.innerHTML = showEmpty('No reviews found.');
       return;
     }
 
@@ -65,7 +67,7 @@ async function loadReviews() {
     });
   } catch (err) {
     console.error(err);
-    reviewsList.innerHTML = '<p>Error loading reviews.</p>';
+    reviewsList.innerHTML = showError('Failed to load reviews. Please try again.');
   }
 }
 

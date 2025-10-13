@@ -36,6 +36,57 @@ Built with Node.js, Express, MongoDB, and vanilla JavaScript, Lively prioritizes
 4. Run `npm start`
 5. Open browser to `http://localhost:3000`
 
+# How to Use Lively
+
+## Getting Started
+
+### Create an Account
+1. Click "Sign Up" in the navigation bar
+2. Enter username, email, and password
+3. Click "Submit" - you'll be automatically logged in
+
+### Browse Artists
+- View all artists on the browse page with their average ratings
+- Use the search bar to find specific artists by name
+- Click any artist to see their detailed reviews
+
+## Submitting a Review
+
+1. Click "Leave a Review" (must be logged in)
+2. Fill out all required fields:
+   - Artist Name
+   - Rating (1-5 stars)
+   - Venue name
+   - Concert date
+   - Detailed comment about the performance
+3. Click "Submit Review"
+4. Your review appears immediately on the artist's page
+
+**Note:** If the artist doesn't exist, the system creates them automatically.
+
+## Viewing Your Reviews
+
+- Click "My Reviews" to see your complete concert history
+- Use this as your personal concert diary
+- Click artist names to revisit their pages
+
+## Writing Good Reviews
+
+- Be specific about what made the show memorable
+- Mention venue, sound quality, setlist, and crowd energy
+- Keep reviews honest and constructive (50-200 words recommended)
+- Help others decide if the artist is worth seeing live
+
+## Admin Functions (Admin Users Only)
+
+**Edit Reviews:** Click "Edit" to modify comment, rating, or venue
+
+**Delete Reviews:** Click "Delete" to remove inappropriate content (spam, offensive language, personal attacks)
+
+All changes update immediately and artist ratings recalculate automatically.
+
+---
+
 ## License
 
 MIT

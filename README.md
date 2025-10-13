@@ -23,7 +23,6 @@ Built with Node.js, Express, MongoDB, and vanilla JavaScript, Lively prioritizes
 ![Lively Preview](public/img/lively_screenshot.png)
 ![Lively Preview](public/img/lively_screenshot2.png)
 ![Lively Preview](public/img/lively_screenshot3.png)
-![Lively Preview](public/img/lively_screenshot4.png)
 ![Lively Preview](public/img/lively_screenshot5.png)
 ![Lively Preview](public/img/lively_screenshot6.png)
 

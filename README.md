@@ -39,3 +39,7 @@ MIT
 ## Link to Deployment
 
 http://lively-ifx9.onrender.com/#/
+
+## Link to Public Video 
+
+https://www.youtube.com/watch?v=ozXAzUvOt64

@@ -109,7 +109,7 @@ export async function renderReviewForm() {
       comment,
       venue,
       concertDate,
-      userId: user.userId,
+      userId: user.id,
       username: user.username,
     };
 

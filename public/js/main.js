@@ -1,5 +1,5 @@
 // public/js/main.js
-
+//good separation of concerns / directory organization
 import { renderPage } from './pages/home.js';
 import { renderRegisterPage } from './pages/register.js';
 import { renderLoginPage } from './pages/login.js';

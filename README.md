@@ -101,3 +101,5 @@ https://www.youtube.com/watch?v=ozXAzUvOt64
 ## Link to Design Document
 
 https://docs.google.com/document/d/1cConP3pvrK_q2V4XnvMrlZWvJ9eqc8SeA9qIuaE-sDw/edit?usp=sharing
+
+Thorough readme, nicely thought out design document as well!

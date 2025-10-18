@@ -1,5 +1,7 @@
 // Database schemas for validation and reference
 
+//supports more than 2 collections in MongoDB
+
 // user db schema
 export const userSchema = {
   username: { type: String, required: true, unique: true },

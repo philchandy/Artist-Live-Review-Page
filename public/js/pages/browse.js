@@ -71,6 +71,7 @@ export async function renderBrowsePage() {
         return;
       }
 
+      //artist card is clickable component- should the tag be <a> or <button> instead of <div>?
       // 🟢 Display artist name + average rating only
       artistsList.innerHTML = artists
         .map(

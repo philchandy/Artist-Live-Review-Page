@@ -1,4 +1,7 @@
 // server.js
+
+// supports CRUD operations for all 3 collections. 
+
 import express from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
